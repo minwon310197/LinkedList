@@ -4,119 +4,150 @@
 #include <iostream>
 using namespace std;
 
-template <typename T> class LinkedList
+template <typename DataType>
+class LinkedList
 {
-private:
-   struct Node
+public:
+   class Node
    {
-      T data;
+   private:
+      DataType data;
       Node* pNext;
-      Node(T value) : data(value), pNext(nullptr) {};
+
+   public:
+      Node(DataType value) : data(value), pNext(nullptr) {};
+      ~Node() {};
+
+      void setData(DataType value) { data = value; }
+      DataType getData() { return data; }
+
+      void setNextPtr(Node* ptr) { pNext = ptr; }
+      Node* getNextPtr() { return pNext; }
    };
 
+private:
    Node* m_pHead;
 
 public:
-   LinkedList() : m_pHead(nullptr) {};
-   ~LinkedList()
-   {
-      deleteList();
-   }
+   LinkedList();
+   ~LinkedList();
 
-   LinkedList(const LinkedList<T>&) = delete;
-   LinkedList& operator=(const LinkedList<T>&) = delete;
+   LinkedList(const LinkedList<DataType>&) = delete;
+   LinkedList& operator=(const LinkedList<DataType>&) = delete;
 
-   void insertNode(T data)
-   {
-      Node* pNewData = new Node(data);
-      if (m_pHead == nullptr)
-      {
-         m_pHead = pNewData;
-      }
-      else
-      {
-         Node* temp = m_pHead;
-
-         // find the last element
-         while (temp->pNext != nullptr)
-         {
-            temp = temp->pNext;
-         }
-
-         // insert to the end of list
-         temp->pNext = pNewData;
-      }
-   }
-
-   Node* searchNode(T data)
-   {
-      Node* pNode = m_pHead;
-
-      while (pNode != nullptr)
-      {
-         if (pNode->data == data)
-         {
-            return pNode;
-         }
-         pNode = pNode->pNext;
-      }
-
-      return nullptr;
-   }
-
-   void deleteNode(T data)
-   {
-      Node* pNode = m_pHead;
-
-      // if head node itself hold the key to be deleted
-      if ((pNode != nullptr) && (pNode->data == data))
-      {
-         m_pHead = pNode->pNext;
-         delete pNode;
-         return;
-      }
-
-      Node* pPrev = nullptr;
-      while ((pNode != nullptr) && (pNode->data != data))
-      {
-         pPrev = pNode;
-         pNode = pNode->pNext;
-      }
-
-      // if key is not present in linked list
-      if (pNode == nullptr)
-         return;
-
-      // key is present, unlink the node from linked list
-      pPrev->pNext = pNode->pNext;
-      delete pNode;
-   }
-
-   void deleteList()
-   {
-      Node* current = m_pHead;
-      Node* next = nullptr;
-
-      while (current != nullptr)
-      {
-         next = current->pNext;
-         delete current;
-         current = next;
-      }
-
-      m_pHead = nullptr;
-   }
-
-   void printList()
-   {
-      Node* pNode = m_pHead;
-      while (pNode != nullptr)
-      {
-         cout << pNode->data << " ";
-         pNode = pNode->pNext;
-      }
-      cout << endl;
-   }
+   void insertNode(DataType data);
+   Node* searchNode(DataType data);
+   void deleteNode(DataType data);
+   void deleteList();
+   void printList();
 };
+
+template <typename DataType>
+LinkedList<DataType>::LinkedList() : m_pHead(nullptr)
+{
+}
+
+template <typename DataType>
+LinkedList<DataType>::~LinkedList()
+{
+   deleteList();
+}
+
+template <typename DataType>
+void LinkedList<DataType>::insertNode(DataType data)
+{
+   Node* pNewData = new Node(data);
+   if (m_pHead == nullptr)
+   {
+      m_pHead = pNewData;
+   }
+   else
+   {
+      Node* temp = m_pHead;
+
+      // find the last element
+      while (temp->getNextPtr() != nullptr)
+      {
+         temp = temp->getNextPtr();
+      }
+
+      // insert to the end of list
+      temp->setNextPtr(pNewData);
+   }
+}
+
+template <typename DataType>
+typename LinkedList<DataType>::Node* LinkedList<DataType>::searchNode(DataType data)
+{
+   Node* pNode = m_pHead;
+
+   while (pNode != nullptr)
+   {
+      if (pNode->getData() == data)
+      {
+         return pNode;
+      }
+      pNode = pNode->getNextPtr();
+   }
+
+   return nullptr;
+}
+
+template <typename DataType>
+void LinkedList<DataType>::deleteNode(DataType data)
+{
+   Node* pNode = m_pHead;
+
+   // if head node itself hold the key to be deleted
+   if ((pNode != nullptr) && (pNode->getData() == data))
+   {
+      m_pHead = pNode->getNextPtr();
+      delete pNode;
+      return;
+   }
+
+   Node* pPrev = nullptr;
+   while ((pNode != nullptr) && (pNode->getData() != data))
+   {
+      pPrev = pNode;
+      pNode = pNode->getNextPtr();
+   }
+
+   // if key is not present in linked list
+   if (pNode == nullptr)
+      return;
+
+   // key is present, unlink the node from linked list
+   pPrev->setNextPtr(pNode->getNextPtr());
+   delete pNode;
+}
+
+template <typename DataType>
+void LinkedList<DataType>::deleteList()
+{
+   Node* current = m_pHead;
+   Node* next = nullptr;
+
+   while (current != nullptr)
+   {
+      next = current->getNextPtr();
+      delete current;
+      current = next;
+   }
+
+   m_pHead = nullptr;
+}
+
+template <typename DataType>
+void LinkedList<DataType>::printList()
+{
+   Node* pNode = m_pHead;
+   while (pNode != nullptr)
+   {
+      cout << pNode->getData() << " ";
+      pNode = pNode->getNextPtr();
+   }
+   cout << endl;
+}
 
 #endif /* LINKEDLIST_H_ */

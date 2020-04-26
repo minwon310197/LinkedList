@@ -10,6 +10,13 @@ int main() {
    numList.insertNode(5);
    numList.printList();
 
+   LinkedList<int>::Node* numNode = numList.searchNode(1);
+   if (numNode)
+   {
+      numNode->setData(6);
+      numList.printList();
+   }
+
    numList.deleteNode(4);
    numList.printList();
 
@@ -21,7 +28,14 @@ int main() {
    charList.insertNode('e');
    charList.printList();
 
-   charList.deleteNode('b');
+   LinkedList<char>::Node* charNode = charList.searchNode('b');
+   if (charNode)
+   {
+      charNode->setData('f');
+      charList.printList();
+   }
+
+   charList.deleteNode('c');
    charList.printList();
 
    return 0;
